@@ -30,4 +30,16 @@ public final class InventoryContract {
         public final static String COLUMN_INVENTORY_PRICE = "price";
         public final static String COLUMN_INVENTORY_QUANTITY = "quantity";
     }
+
+    public static boolean isValidName(String name){
+        return name != null;
+    }
+
+    public static boolean isValidPrice(Integer price){
+        return (price != null && price > 0);
+    }
+
+    public static boolean isValidQuantity(Integer quantity){
+        return (quantity == null || quantity >= 0);
+    }
 }
