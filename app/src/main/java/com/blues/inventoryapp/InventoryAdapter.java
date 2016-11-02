@@ -39,7 +39,15 @@ public class InventoryAdapter extends CursorAdapter {
         int quantity = cursor.getInt(quantityColumnIndex);
 
         nameTv.setText(name);
-        priceTv.setText(price);
-        quantityTv.setText(quantity);
+        priceTv.setText(formatPrice(price));
+        quantityTv.setText(formatQuantity(quantity));
+    }
+
+    private String formatPrice(int price){
+        return "Price: $" + price;
+    }
+
+    private String formatQuantity(int quantity){
+        return "Quantity: " + quantity;
     }
 }

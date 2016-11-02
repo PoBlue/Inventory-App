@@ -4,32 +4,66 @@
     android:id="@+id/activity_editor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.blues.inventoryapp.EditorActivity">
 
-    <EditText
-        android:id="@+id/edit_product_name"
-        style="@style/EditorFieldStyle"
-        android:hint="Name"
-        android:imeOptions="actionNext"
-        android:inputType="textCapWords" />
+    <LinearLayout style="@style/LinearStyle">
 
-    <EditText
-        android:id="@+id/edit_product_price"
-        style="@style/EditorFieldStyle"
-        android:hint="Price"
-        android:imeOptions="actionNext"
-        android:inputType="number" />
+        <TextView
+            style="@style/RedTextViewStyle"
+            android:text="Name:" />
 
-    <EditText
-        android:id="@+id/edit_product_quantity"
-        style="@style/EditorFieldStyle"
-        android:hint="Quantity"
-        android:imeOptions="actionDone"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/edit_product_name"
+            style="@style/EditorFieldStyle"
+            android:hint="Input Name"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/LinearStyle">
+
+        <TextView
+            style="@style/RedTextViewStyle"
+            android:text="Price:" />
+
+        <EditText
+            android:id="@+id/edit_product_price"
+            style="@style/EditorFieldStyle"
+            android:hint="Input Price"
+            android:imeOptions="actionNext"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/LinearStyle">
+
+        <TextView
+            style="@style/RedTextViewStyle"
+            android:text="Quantity:" />
+
+        <EditText
+            android:id="@+id/edit_product_quantity"
+            style="@style/EditorFieldStyle"
+            android:hint="Input Quantity"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/LinearStyle"
+        android:gravity="center">
+
+        <Button
+            style="@style/normalButton"
+            android:text="Order" />
+
+        <Button
+            style="@style/normalButton"
+            android:text="Sale" />
+    </LinearLayout>
 
 </LinearLayout>

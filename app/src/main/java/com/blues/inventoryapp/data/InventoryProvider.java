@@ -69,6 +69,7 @@ public class InventoryProvider extends ContentProvider {
 
     @Nullable
     @Override
+
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match){

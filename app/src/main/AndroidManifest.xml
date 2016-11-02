@@ -16,6 +16,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditorActivity"/>
+        <provider
+            android:exported="false"
+            android:authorities="com.blues.inventoryapp"
+            android:name=".data.InventoryProvider"/>
     </application>
 
 </manifest>
