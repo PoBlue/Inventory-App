@@ -19,6 +19,7 @@ public class InventoryAdapter extends CursorAdapter {
         super(context, c, 0);
     }
 
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         return LayoutInflater.from(context).inflate(R.layout.list_item, viewGroup, false);
@@ -41,6 +42,10 @@ public class InventoryAdapter extends CursorAdapter {
         nameTv.setText(name);
         priceTv.setText(formatPrice(price));
         quantityTv.setText(formatQuantity(quantity));
+    }
+
+
+    private void setTextView(View view, Cursor cursor) {
     }
 
     private String formatPrice(int price){
