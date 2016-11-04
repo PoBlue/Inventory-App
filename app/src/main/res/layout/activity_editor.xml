@@ -1,81 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_editor"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.blues.inventoryapp.EditorActivity">
+    android:layout_height="match_parent">
 
-    <LinearLayout style="@style/LinearStyle">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.blues.inventoryapp.EditorActivity">
 
-        <TextView
-            style="@style/RedTextViewStyle"
-            android:text="Name:" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/edit_product_name"
-            style="@style/EditorFieldStyle"
-            android:hint="Input Name"
-            android:imeOptions="actionNext"
-            android:inputType="textCapWords" />
+            <ImageView
+                android:id="@+id/product_image"
+                android:contentDescription="capture image thorough button"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop" />
+
+
+                <Button
+                    style="@style/normalButton"
+                    android:onClick="pickImage"
+                    android:text="Capture image" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/LinearStyle">
+
+            <TextView
+                style="@style/RedTextViewStyle"
+                android:text="Name:" />
+
+            <EditText
+                android:id="@+id/edit_product_name"
+                style="@style/EditorFieldStyle"
+                android:hint="Input Name"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/LinearStyle">
+
+            <TextView
+                style="@style/RedTextViewStyle"
+                android:text="Price: $" />
+
+            <EditText
+                android:id="@+id/edit_product_price"
+                style="@style/EditorFieldStyle"
+                android:hint="Input Price"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/LinearStyle">
+
+            <TextView
+                style="@style/RedTextViewStyle"
+                android:text="Quantity:" />
+
+            <EditText
+                android:id="@+id/edit_product_quantity"
+                style="@style/EditorFieldStyle"
+                android:hint="Input Quantity"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/edit_button"
+            style="@style/LinearStyle"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/orderBtn"
+                style="@style/normalButton"
+                android:layout_weight="1"
+                android:onClick="orderClick"
+                android:text="Order" />
+
+            <Button
+                android:id="@+id/saleBtn"
+                style="@style/normalButton"
+                android:layout_weight="1"
+                android:onClick="quantityClick"
+                android:text="Sale" />
+
+            <Button
+                android:id="@+id/buyBtn"
+                style="@style/normalButton"
+                android:layout_weight="1"
+                android:onClick="quantityClick"
+                android:text="Buy" />
+        </LinearLayout>
+
+
     </LinearLayout>
-
-    <LinearLayout style="@style/LinearStyle">
-
-        <TextView
-            style="@style/RedTextViewStyle"
-            android:text="Price: $" />
-
-        <EditText
-            android:id="@+id/edit_product_price"
-            style="@style/EditorFieldStyle"
-            android:hint="Input Price"
-            android:imeOptions="actionNext"
-            android:inputType="number" />
-    </LinearLayout>
-
-    <LinearLayout style="@style/LinearStyle">
-
-        <TextView
-            style="@style/RedTextViewStyle"
-            android:text="Quantity:" />
-
-        <EditText
-            android:id="@+id/edit_product_quantity"
-            style="@style/EditorFieldStyle"
-            android:hint="Input Quantity"
-            android:imeOptions="actionDone"
-            android:inputType="numberDecimal" />
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/LinearStyle"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/orderBtn"
-            style="@style/normalButton"
-            android:layout_weight="1"
-            android:onClick="orderClick"
-            android:text="Order" />
-
-        <Button
-            android:id="@+id/saleBtn"
-            style="@style/normalButton"
-            android:layout_weight="1"
-            android:onClick="quantityClick"
-            android:text="Sale" />
-
-        <Button
-            android:id="@+id/buyBtn"
-            style="@style/normalButton"
-            android:layout_weight="1"
-            android:onClick="quantityClick"
-            android:text="Buy" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

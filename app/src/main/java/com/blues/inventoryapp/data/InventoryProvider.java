@@ -98,6 +98,7 @@ public class InventoryProvider extends ContentProvider {
         String name = values.getAsString(InventoryEntry.COLUMN_INVENTORY_NAME);
         Integer price = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_PRICE);
         Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
+        String imagePath = values.getAsString(InventoryEntry.COLUMN_INVENTORY_IMAGE_PATH);
 
         if (!InventoryContract.isValidName(name)){
             throw new IllegalArgumentException("Inventory requires a name");
@@ -109,6 +110,10 @@ public class InventoryProvider extends ContentProvider {
 
         if (!InventoryContract.isValidQuantity(quantity)) {
             throw new IllegalArgumentException("Inventory requires a quantity is large than or equal 0");
+        }
+
+        if (!InventoryContract.isValidImagePath(imagePath)){
+            throw new IllegalArgumentException("Inventory requires an image");
         }
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -186,6 +191,13 @@ public class InventoryProvider extends ContentProvider {
             Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
             if (!InventoryContract.isValidQuantity(quantity)) {
                 throw new IllegalArgumentException("Inventory requires a quantity is large than or equal 0");
+            }
+        }
+
+        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_IMAGE_PATH)) {
+            String imagePath = values.getAsString(InventoryEntry.COLUMN_INVENTORY_IMAGE_PATH);
+            if (!InventoryContract.isValidImagePath(imagePath)) {
+                throw new IllegalArgumentException("Inventory requires an image");
             }
         }
 

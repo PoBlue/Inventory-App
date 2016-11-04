@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_INVENTORY_NAME,
                 InventoryEntry.COLUMN_INVENTORY_PRICE,
-                InventoryEntry.COLUMN_INVENTORY_QUANTITY
+                InventoryEntry.COLUMN_INVENTORY_QUANTITY,
+                InventoryEntry.COLUMN_INVENTORY_IMAGE_PATH
         };
 
         return new CursorLoader(this,

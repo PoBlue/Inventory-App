@@ -29,6 +29,11 @@ public final class InventoryContract {
         public final static String COLUMN_INVENTORY_NAME = "name";
         public final static String COLUMN_INVENTORY_PRICE = "price";
         public final static String COLUMN_INVENTORY_QUANTITY = "quantity";
+        public final static String COLUMN_INVENTORY_IMAGE_PATH = "ImagePath";
+    }
+
+    public static boolean isValidImagePath(String imagePath) {
+        return imagePath != null && !imagePath.isEmpty();
     }
 
     public static boolean isValidName(String name){

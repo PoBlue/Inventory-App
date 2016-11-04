@@ -7,28 +7,45 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.blues.inventoryapp.data.InventoryContract;
 import com.blues.inventoryapp.data.InventoryContract.InventoryEntry;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static java.lang.Integer.parseInt;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
+    private static final String LOG_TAG = EditorActivity.class.getSimpleName();
+    private Bitmap mImageBitmap;
+    private static final String IMAGE_PATH_KEY = "imagePathKey";
+    String mCurrentPhotoPath = "";
+    private ImageView mImageView;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int EXISTING_INVENTORY_LOADER = 0;
     private Uri mCurrentInventoryUri;
     private boolean mInventoryHasChange = false;
@@ -39,10 +56,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            mCurrentPhotoPath = savedInstanceState.getString(IMAGE_PATH_KEY);
+        }
         setContentView(R.layout.activity_editor);
 
         initBarTitle();
         initEditText();
+        initImage();
+    }
+
+    private void initImage(){
+        mImageView = (ImageView) findViewById(R.id.product_image);
     }
 
     private void initBarTitle(){
@@ -58,6 +83,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             setButtonVisable(true);
             Log.e("uri",mCurrentInventoryUri.toString());
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(IMAGE_PATH_KEY, mCurrentPhotoPath);
+        super.onSaveInstanceState(outState);
     }
 
     private void initEditText(){
@@ -87,6 +118,50 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    public void pickImage(View v){
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.i(LOG_TAG, "IOException");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            displayImageWithBitmap();
+        }
+    }
+
     private void saveInventory(){
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
@@ -94,13 +169,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         if (mCurrentInventoryUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString)){
+                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(mCurrentPhotoPath)){
             Toast.makeText(this, "Error data so that not save", Toast.LENGTH_SHORT).show();
             return;
         }
 
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_INVENTORY_NAME, nameString);
+        values.put(InventoryEntry.COLUMN_INVENTORY_IMAGE_PATH, mCurrentPhotoPath);
 
         int price = 0;
         if (!TextUtils.isEmpty(priceString)) {
@@ -116,7 +192,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         if ( !InventoryContract.isValidQuantity(quantity)
                 || !InventoryContract.isValidPrice(price)
-                || !InventoryContract.isValidName(nameString)){
+                || !InventoryContract.isValidName(nameString)
+                || !InventoryContract.isValidImagePath(mCurrentPhotoPath)){
             Toast.makeText(this,"Error data so that not save",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -239,7 +316,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_INVENTORY_NAME,
                 InventoryEntry.COLUMN_INVENTORY_PRICE,
-                InventoryEntry.COLUMN_INVENTORY_QUANTITY
+                InventoryEntry.COLUMN_INVENTORY_QUANTITY,
+                InventoryEntry.COLUMN_INVENTORY_IMAGE_PATH
         };
 
         return new CursorLoader(this,
@@ -261,14 +339,38 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_NAME);
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
+            int imagePathColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_IMAGE_PATH);
 
             mName = cursor.getString(nameColumnIndex);
+            mCurrentPhotoPath = cursor.getString(imagePathColumnIndex);
             mPrice = String.valueOf(cursor.getInt(priceColumnIndex));
             mQuantity = String.valueOf(cursor.getInt(quantityColumnIndex));
 
             mNameEditText.setText(mName);
             mPriceEditText.setText(mPrice);
             mQuantityEditText.setText(mQuantity);
+            displayImageWithBitmap();
+        }
+
+    }
+
+    private void  displayImageWithBitmap(){
+        initImage();
+        try {
+            mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
+            float scaleHt =(float) width/mImageBitmap.getWidth();
+            Log.e("Scaled percent ", " "+scaleHt);
+            Bitmap scaled = Bitmap.createScaledBitmap(mImageBitmap, width, (int)(mImageBitmap.getWidth()*scaleHt), true);
+
+            mImageView.setImageBitmap(scaled);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
