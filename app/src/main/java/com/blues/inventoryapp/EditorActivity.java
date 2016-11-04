@@ -95,6 +95,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentInventoryUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString)){
+            Toast.makeText(this, "Error data so that not save", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -126,6 +127,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, "Error with saving inventory", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Inventory saved", Toast.LENGTH_SHORT).show();
+                finish();
             }
         } else {
             int rowsAffected = getContentResolver().update(mCurrentInventoryUri, values, null, null);
@@ -134,6 +136,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, "Error with updating inventory", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Inventory updated", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
 
@@ -172,7 +175,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         switch (item.getItemId()){
             case R.id.action_save:
                 saveInventory();
-                finish();
                 return true;
             case R.id.action_delete:
                 showDeleteConfirmationDialog();

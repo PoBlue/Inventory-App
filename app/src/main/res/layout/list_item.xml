@@ -18,5 +18,11 @@
         style="@style/NormalTvStyle"
         tools:text="Quantity" />
 
+    <Button
+        android:id="@+id/saleButton"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        style="@style/normalButton"
+        android:text="Sale" />
 
 </LinearLayout>

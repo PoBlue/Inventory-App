@@ -1,10 +1,14 @@
 package com.blues.inventoryapp;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -31,17 +35,38 @@ public class InventoryAdapter extends CursorAdapter {
         TextView priceTv = (TextView) view.findViewById(R.id.price);
         TextView quantityTv = (TextView) view.findViewById(R.id.quantity);
 
+        int idColumnIndex = cursor.getColumnIndex(InventoryEntry._ID);
         int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
 
-        String name = cursor.getString(nameColumnIndex);
-        int price = cursor.getInt(priceColumnIndex);
-        int quantity = cursor.getInt(quantityColumnIndex);
+        final String name = cursor.getString(nameColumnIndex);
+        final int price = cursor.getInt(priceColumnIndex);
+        final int quantity = cursor.getInt(quantityColumnIndex);
+        final int rowId = cursor.getInt(idColumnIndex);
 
         nameTv.setText(name);
         priceTv.setText(formatPrice(price));
         quantityTv.setText(formatQuantity(quantity));
+
+        Button saleBtn = (Button) view.findViewById(R.id.saleButton);
+        saleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri currentInventoryUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, rowId);
+
+                ContentValues values = new ContentValues();
+                if (quantity > 0){
+                    values.put(InventoryEntry.COLUMN_INVENTORY_NAME, name);
+                    values.put(InventoryEntry.COLUMN_INVENTORY_PRICE,price);
+                    values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantity - 1);
+                } else {
+                    return;
+                }
+
+                view.getContext().getContentResolver().update(currentInventoryUri, values, null, null);
+            }
+        });
     }
 
 
