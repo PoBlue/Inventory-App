@@ -355,7 +355,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void  displayImageWithBitmap(){
-        initImage();
         try {
             mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
 
