@@ -56,14 +56,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null){
-            mCurrentPhotoPath = savedInstanceState.getString(IMAGE_PATH_KEY);
-        }
         setContentView(R.layout.activity_editor);
 
         initBarTitle();
         initEditText();
         initImage();
+
+        if(savedInstanceState != null){
+            mCurrentPhotoPath = savedInstanceState.getString(IMAGE_PATH_KEY);
+            displayImageWithBitmap();
+        }
     }
 
     private void initImage(){
