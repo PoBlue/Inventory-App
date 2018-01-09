@@ -1,5 +1,6 @@
 package com.blues.inventoryapp;
 
+import android.Manifest;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.CursorLoader;
@@ -28,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //请求读写权限
+        Utils.requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 0);
+        Utils.requestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, 1);
 
         setListView();
         setFloatingBtn();

@@ -1,5 +1,6 @@
 package com.blues.inventoryapp;
 
+import android.Manifest;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -61,6 +62,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         initBarTitle();
         initEditText();
         initImage();
+
+        //请求图片权限
+        Utils.requestPermission(this, Manifest.permission.CAMERA, 2);
 
         if(savedInstanceState != null){
             mCurrentPhotoPath = savedInstanceState.getString(IMAGE_PATH_KEY);
