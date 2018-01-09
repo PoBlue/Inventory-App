@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -137,7 +138,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".my.package.name.provider", photoFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
